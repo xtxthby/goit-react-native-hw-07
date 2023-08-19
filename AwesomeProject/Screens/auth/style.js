@@ -1,0 +1,126 @@
+import { StyleSheet } from "react-native";
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#F0FFF0",
+  },
+  imgBg: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "flex-end",
+  },
+  box: {
+    position: "relative",
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    marginTop: "auto",
+    backgroundColor: "#FFFFFF",
+  },
+
+  form: {
+    marginHorizontal: 16,
+  },
+  headerLogin: {
+    marginTop: 32,
+    marginBottom: 32,
+    alignItems: "center",
+  },
+  headerRegistr: {
+    marginTop: 92,
+    marginBottom: 32,
+    alignItems: "center",
+  },
+  title: {
+    fontFamily: "RobotoMono-Regular",
+    fontSize: 30,
+    color: "#212121",
+  },
+
+  input: {
+    height: 40,
+    borderWidth: 1,
+    borderColor: "#E8E8E8",
+    borderRadius: 10,
+    padding: 10,
+    color: "#212121",
+    fontSize: 15,
+  },
+  button: {
+    marginHorizontal: 16,
+    marginTop: 43,
+    marginBottom: 16,
+    height: 51,
+    borderRadius: 100,
+    borderWidth: 1,
+    alignItems: "center",
+    borderColor: "#FF6C00",
+    backgroundColor: "#FF6C00",
+    paddingLeft: 32,
+    paddingRight: 32,
+    paddingTop: 16,
+    paddingBottom: 16,
+  },
+  buttonText: {
+    fontFamily: "RobotoMono-Regular",
+    color: "#FfFFFf",
+    fontSize: 16,
+  },
+  bottomContainer: {
+    alignItems: "center",
+  },
+  bottomText: {
+    fontFamily: "RobotoMono-Regular",
+    fontSize: 14,
+  },
+  validContainer: {
+    marginTop: 10,
+    alignItems: "center",
+  },
+  valid: {
+    color: "#fa0000",
+  },
+  avatar: {
+    position: "absolute",
+    backgroundColor: "#F6F6F6",
+    borderRadius: 16,
+    top: -60,
+    alignSelf: "center",
+    marginHorizontal: "auto",
+    width: 120,
+    height: 120,
+  },
+  avatarImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 16,
+  },
+  btnAddAvatar: {
+    position: "absolute",
+    bottom: 14,
+    right: -12.5,
+    justifyContent: "center",
+    alignItems: "center",
+    width: 25,
+    height: 25,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 50,
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: "#FF6C00",
+  },
+  btnRemoveAvatar: {
+    position: "absolute",
+    bottom: 14,
+    right: -12.5,
+    justifyContent: "center",
+    alignItems: "center",
+    width: 25,
+    height: 25,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 50,
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: "#E8E8E8",
+  },
+});
