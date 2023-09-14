@@ -1,33 +1,27 @@
+import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import RegistrationScreen from "./Screens/auth/RegistrationScreen";
-import LoginScreen from "./Screens/auth/LoginScreen";
-import Home from "./Screens/mainScreens/Home";
+import { LoginScreen } from "./Screens/auth/LoginScreen";
+import { RegistrationScreen } from "./Screens/auth/RegistrationScreen";
+import { HomeScreen } from "./Screens/main/Home";
 
-const AuthStack = createStackNavigator();
-const HomeStack = createStackNavigator();
+const Stack = createStackNavigator();
 
 export const useRoute = (isAuth) => {
   if (!isAuth) {
     return (
-      <AuthStack.Navigator
-        initialRouteName="Login"
-        screenOptions={{ headerShown: false }}
-      >
-        <AuthStack.Screen name="Login" component={LoginScreen} />
-        <AuthStack.Screen name="Registration" component={RegistrationScreen} />
-      </AuthStack.Navigator>
+      <Stack.Navigator>
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Login"
+          component={LoginScreen}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Register"
+          component={RegistrationScreen}
+        />
+      </Stack.Navigator>
     );
   }
-  return (
-    <HomeStack.Navigator
-      initialRouteName="Login"
-      screenOptions={{ headerShown: false }}
-    >
-      <HomeStack.Screen
-        options={{ headerShown: false }}
-        name="Home"
-        component={Home}
-      />
-    </HomeStack.Navigator>
-  );
+  return <HomeScreen />;
 };

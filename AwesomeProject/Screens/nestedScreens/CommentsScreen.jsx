@@ -1,78 +1,76 @@
-import { useState, useEffect } from "react";
 import {
-  TouchableWithoutFeedback,
-  View,
-  TextInput,
-  StyleSheet,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Image,
-  FlatList,
+  StyleSheet,
+  TextInput,
   Text,
+  View,
   Keyboard,
+  FlatList,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { collection, doc, getDocs, setDoc } from "firebase/firestore";
-import { db } from "../../firebase/config";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import foto from "../../assets/image/Rectangle.png";
+import { collection, doc, getDocs, setDoc } from "firebase/firestore";
 
-function CommentsScreen({ route }) {
-  const [isFocus, setIsFocus] = useState({
-    send: false,
-  });
-  const [commentsList, setCommentsList] = useState("");
-  const [message, setMessage] = useState("");
+import { db } from "../../firebase/config";
+import foto from "../../assets/images/AvatarPhoto.png";
+
+export const CommentsScreen = ({ route }) => {
+  const [comment, setComment] = useState("");
+  const [commentList, setCommentList] = useState([]);
+
   const { userId, login } = useSelector((state) => state.auth);
-  const { postId, photo } = route.params;
-  console.log(commentsList);
+  const { photo, postId } = route.params;
+
   useEffect(() => {
-    getCommentsList();
+    getCommentList();
   }, []);
 
-  const createComments = async () => {
+  const createComment = async () => {
     const uniqName = Date.now().toString();
     await setDoc(doc(db, "posts", postId, "comments", uniqName), {
       login,
-      message,
+      comment,
       userId,
       createdAt: commentDate(),
     });
     keyboardHide();
-    setMessage("");
+    setComment("");
   };
 
-  const getCommentsList = async () => {
+  const getCommentList = async () => {
     const querySnapshot = await getDocs(
       collection(db, "posts", postId, "comments")
     );
     if (querySnapshot) {
-      setCommentsList(
+      setCommentList(
         querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
       );
     }
   };
+
   const keyboardHide = () => {
     Keyboard.dismiss();
   };
-
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container}>
-        <View style={styles.list}>
+        <View style={styles.picturePost}>
           <Image source={{ uri: photo }} style={styles.Image} />
         </View>
         <FlatList
-          data={commentsList}
+          data={commentList}
           renderItem={({ item }) => (
             <View
               style={
                 item.userId === userId
                   ? styles.commentBox
                   : { ...styles.commentBox, flexDirection: "row-reverse" }
-              }
-            >
-              <View style={styles.commentTextWrapper}>
-                <Text style={styles.commentText}>{item.message}</Text>
+              }>
+              <View style={styles.commentPostWrapper}>
+                <Text style={styles.commentPost}>{item.comment}</Text>
                 <Text style={styles.commentDate}>{item.createdAt}</Text>
               </View>
               <View style={styles.commentAvatar}>
@@ -87,35 +85,18 @@ function CommentsScreen({ route }) {
         <TextInput
           placeholderTextColor={"#BDBDBD"}
           placeholder={"Коментувати..."}
-          style={{
-            ...styles.input,
-            borderColor: isFocus.send ? "#FF6C00" : "#F6F6F6",
-            backgroundColor: isFocus.send ? "#FFFFFF" : "#F6F6F6",
-          }}
+          value={comment}
+          style={styles.input}
           selectionColor={"#FF6C00"}
-          onFocus={() => {
-            setIsFocus({
-              ...isFocus,
-              send: true,
-            });
-          }}
-          onBlur={() => {
-            setIsFocus({
-              ...isFocus,
-              send: false,
-            });
-          }}
-          value={message}
-          onChangeText={(value) => setMessage(value)}
+          onChangeText={setComment}
         />
-        <TouchableOpacity style={styles.iconBtn} onPress={createComments}>
+        <TouchableOpacity style={styles.iconBtn} onPress={createComment}>
           <Feather name="send" size={18} color="#fff" style={styles.iconSend} />
         </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>
   );
-}
-export default CommentsScreen;
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -124,8 +105,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingHorizontal: 16,
   },
-  list: { marginTop: 32, marginBottom: 16 },
-
+  picturePost: {
+    marginTop: 32,
+    marginBottom: 16,
+  },
+  Image: {
+    height: 240,
+    borderRadius: 8,
+  },
   input: {
     alignItems: "center",
     height: 50,
@@ -151,10 +138,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#FF6C00",
     justifyContent: "center",
   },
-  Image: {
-    height: 240,
-    borderRadius: 8,
-  },
   commentBox: {
     marginBottom: 24,
     display: "flex",
@@ -162,22 +145,24 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     gap: 16,
   },
-  commentTextWrapper: {
+  commentPostWrapper: {
     backgroundColor: "rgba(0, 0, 0, 0.03)",
-    borderRadius: 6,
+    borderBottomEndRadius: 6,
+    borderTopLeftRadius: 6,
+    borderBottomLeftRadius: 6,
     padding: 16,
     width: 250,
     flexGrow: 1,
   },
-  commentDate: {
-    fontFamily: "RobotoMono-Regular",
-    fontSize: 10,
-    color: "#bdbdbd",
-  },
-  commentText: {
-    fontFamily: "RobotoMono-Regular",
+  commentPost: {
+    fontFamily: "Roboto-Regular",
     fontSize: 13,
     color: "#212121",
+  },
+  commentDate: {
+    fontFamily: "Roboto-Regular",
+    fontSize: 10,
+    color: "#bdbdbd",
   },
   commentAvatar: {
     borderRadius: 100,

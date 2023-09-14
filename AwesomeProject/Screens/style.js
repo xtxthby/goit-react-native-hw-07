@@ -1,0 +1,115 @@
+import { StyleSheet } from "react-native";
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  imgBg: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "flex-end",
+  },
+  avatarContainer: {
+    position: "absolute",
+    borderRadius: 16,
+    backgroundColor: "#F6F6F6",
+    top: -60,
+    alignSelf: "center",
+    marginHorizontal: "auto",
+    width: 120,
+    height: 120,
+  },
+  avatarImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 16,
+  },
+  btnAddAvatar: {
+    position: "absolute",
+    bottom: 14,
+    right: -12.5,
+    justifyContent: "center",
+    alignItems: "center",
+    width: 25,
+    height: 25,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 50,
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: "#FF6C00",
+  },
+  btnRemoveAvatar: {
+    position: "absolute",
+    bottom: 14,
+    right: -12.5,
+    justifyContent: "center",
+    alignItems: "center",
+    width: 25,
+    height: 25,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 50,
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: "#E8E8E8",
+  },
+  form: {
+    padding: 20,
+    backgroundColor: "#fff",
+    borderTopRightRadius: 25,
+    borderTopLeftRadius: 25,
+    position: "relative",
+  },
+  title: {
+    paddingTop: 60,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  textTitle: {
+    fontSize: 30,
+    fontFamily: "Roboto-Medium",
+  },
+  validContainer: {
+    marginTop: 10,
+    alignItems: "center",
+  },
+  valid: {
+    color: "#fa0000",
+  },
+  input: {
+    height: 50,
+    color: "#000000",
+    borderColor: "#808080",
+    backgroundColor: "#e6e6fa",
+    borderWidth: 1,
+    marginTop: 20,
+
+    padding: 10,
+    borderRadius: 10,
+  },
+  button: {
+    backgroundColor: "#ffa500",
+    borderColor: "#ffa500",
+    height: 50,
+    borderRadius: 28,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 30,
+  },
+  buttonTitle: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontFamily: "Roboto-Regular",
+  },
+  notice: {
+    marginTop: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  textNotice: {
+    fontSize: 16,
+    fontFamily: "Roboto-Regular",
+  },
+  linkButton: {
+    textDecorationLine: "underline",
+  },
+});

@@ -1,227 +1,215 @@
-import { useState, useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
-import { Formik } from "formik";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import {
-  View,
   Text,
+  View,
+  ImageBackground,
+  TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
-  TouchableWithoutFeedback,
   Platform,
   Keyboard,
+  TouchableWithoutFeedback,
   Image,
-  TextInput,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import img from "../../assets/image/img-bg.png";
-import foto from "../../assets/image/Rectangle.png";
-import { ImageBackground } from "react-native";
-import { SignupSchema } from "../../options/validForm";
-import { styles } from "./style.js";
-import { authSignUp } from "../../redux/auth/authOptions";
 
-function RegistrationScreen() {
-  const [isShowKey, setIsShowKey] = useState(false);
-  const navigation = useNavigation();
+import { authSignUpUser } from "../../redux/auth/authOperations";
+import foto from "../../assets/images/AvatarPhoto.png";
+import img from "../../assets/images/PhotoBG.png";
+import { styles } from "../style";
+
+export const RegistrationScreen = ({ navigation }) => {
+  const [isShownKey, setIsShownKey] = useState(false);
   const [isFocus, setIsFocus] = useState({
     email: false,
     password: false,
     login: false,
   });
-
+  const [login, setLogin] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  console.log(login, email, password);
+  const data = { ...login, ...email, ...password };
+  console.log(data);
   const dispatch = useDispatch();
+
+  const resetForm = () => {
+    setLogin("");
+    setPassword("");
+    setEmail("");
+  };
+  const validateEmail = (email) => {
+    // console.log(email);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // console.log(emailRegex);
+    return emailRegex.test(email.email);
+  };
+
+  const handelSubmit = () => {
+    if (!login || !email || !password)
+      return console.warn(" Введіть будь ласка дані");
+    if (!validateEmail(email))
+      return console.warn(`Некоректна адреса електронної пошти!`);
+    dispatch(authSignUpUser(data));
+
+    keyBoardHide();
+    resetForm();
+  };
+  const keyBoardHide = () => {
+    setIsShownKey(true);
+    Keyboard.dismiss();
+  };
 
   useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
-      setIsShowKey(true);
+      setIsShownKey(true);
     });
     const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
-      setIsShowKey(false);
+      setIsShownKey(false);
     });
-
     return () => {
       showSubscription.remove();
       hideSubscription.remove();
     };
   }, []);
 
-  const handlerSubmit = (values) => {
-    dispatch(authSignUp(values));
-  };
-
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    <TouchableWithoutFeedback onPress={keyBoardHide}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
-      >
+        style={styles.container}>
         <ImageBackground style={styles.imgBg} source={img}>
-          <Formik
-            initialValues={{ email: "", login: "", password: "" }}
-            validationSchema={SignupSchema}
-          >
-            {({ values, errors, handleChange, resetForm }) => (
-              <View style={styles.box}>
-                <View style={styles.avatar}>
-                  <Image source={foto} style={styles.avatarImage} />
-                  {!foto ? (
-                    <TouchableOpacity
-                      style={styles.btnAddAvatar}
-                      activeOpacity={0.9}
-                    >
-                      <Ionicons name="add" size={20} color="#FF6C00" />
-                    </TouchableOpacity>
-                  ) : (
-                    <TouchableOpacity
-                      style={styles.btnRemoveAvatar}
-                      activeOpacity={0.9}
-                    >
-                      <Ionicons name="close" size={20} color="#E8E8E8" />
-                    </TouchableOpacity>
-                  )}
-                </View>
+          <View
+            style={{
+              ...styles.form,
+              paddingBottom: isShownKey ? 20 : 100,
+            }}>
+            <View style={styles.avatarContainer}>
+              <Image source={foto} style={styles.avatarImage} />
+              {!foto ? (
+                <TouchableOpacity
+                  style={styles.btnAddAvatar}
+                  activeOpacity={0.9}>
+                  <Ionicons name="add" size={20} color="#FF6C00" />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={styles.btnRemoveAvatar}
+                  activeOpacity={0.9}>
+                  <Ionicons name="close" size={20} color="#E8E8E8" />
+                </TouchableOpacity>
+              )}
+            </View>
+            <View style={styles.title}>
+              <Text style={styles.textTitle}>Реєстрація</Text>
+            </View>
 
-                <View style={styles.headerRegistr}>
-                  <Text style={styles.title}>Реєстрація</Text>
-                </View>
-                <View
-                  style={{
-                    ...styles.form,
-                    marginBottom: isShowKey ? -20 : 111,
-                  }}
-                >
-                  <View>
-                    <TextInput
-                      placeholderTextColor={"#BDBDBD"}
-                      placeholder={"Логін"}
-                      style={{
-                        ...styles.input,
-                        borderColor: isFocus.login ? "#FF6C00" : "#F6F6F6",
-                        backgroundColor: isFocus.login ? "#FFFFFF" : "#F6F6F6",
-                      }}
-                      value={values.login}
-                      onFocus={() => {
-                        setIsFocus({
-                          ...isFocus,
-                          login: true,
-                        });
-                      }}
-                      onBlur={() => {
-                        setIsFocus({
-                          ...isFocus,
-                          login: false,
-                        });
-                      }}
-                      onChangeText={handleChange("login")}
-                    />
-                    {errors.login && (
-                      <View style={styles.validContainer}>
-                        <Text style={styles.valid}>{errors.login}</Text>
-                      </View>
-                    )}
-                  </View>
+            <View>
+              <TextInput
+                placeholder="Логін"
+                style={{
+                  ...styles.input,
+                  borderColor: isFocus.login ? "#FF6C00" : "#F6F6F6",
+                  backgroundColor: isFocus.login ? "#FFFFFF" : "#F6F6F6",
+                }}
+                value={login}
+                onFocus={() => {
+                  setIsFocus({
+                    ...isFocus,
+                    login: true,
+                  });
+                }}
+                onBlur={() => {
+                  setIsFocus({
+                    ...isFocus,
+                    login: false,
+                  });
+                }}
+                onChangeText={(login) => {
+                  setLogin((prevState) => ({ ...prevState, login }));
+                }}
+              />
+            </View>
 
-                  <View style={{ marginTop: 16 }}>
-                    <TextInput
-                      placeholderTextColor={"#BDBDBD"}
-                      placeholder={"Адреса електронної пошти"}
-                      inputMode={"email"}
-                      keyboardType={"email-address"}
-                      style={{
-                        ...styles.input,
-                        borderColor: isFocus.email ? "#FF6C00" : "#F6F6F6",
-                        backgroundColor: isFocus.email ? "#FFFFFF" : "#F6F6F6",
-                      }}
-                      value={values.email}
-                      onFocus={() => {
-                        setIsFocus({
-                          ...isFocus,
-                          email: true,
-                        });
-                      }}
-                      onBlur={() => {
-                        setIsFocus({
-                          ...isFocus,
-                          email: false,
-                        });
-                      }}
-                      onChangeText={handleChange("email")}
-                    />
-                    {errors.email && (
-                      <View style={styles.validContainer}>
-                        <Text style={styles.valid}>{errors.email}</Text>
-                      </View>
-                    )}
-                  </View>
-                  <View style={{ marginTop: 16 }}>
-                    <TextInput
-                      placeholderTextColor={"#BDBDBD"}
-                      placeholder={"••••••••••••"}
-                      style={{
-                        ...styles.input,
-                        borderColor: isFocus.password ? "#FF6C00" : "#F6F6F6",
-                        backgroundColor: isFocus.password
-                          ? "#FFFFFF"
-                          : "#F6F6F6",
-                      }}
-                      value={values.password}
-                      secureTextEntry={true}
-                      selectionColor={"#FF6C00"}
-                      onFocus={() => {
-                        setIsFocus({
-                          ...isFocus,
-                          password: true,
-                        });
-                      }}
-                      onBlur={() => {
-                        setIsFocus({
-                          ...isFocus,
-                          password: false,
-                        });
-                      }}
-                      onChangeText={handleChange("password")}
-                    />
-                    {errors.password && (
-                      <View style={styles.validContainer}>
-                        <Text style={styles.valid}>{errors.password}</Text>
-                      </View>
-                    )}
-                  </View>
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => {
-                      handlerSubmit(values);
-                      resetForm({
-                        values: {
-                          login: "",
-                          email: "",
-                          password: "",
-                        },
-                      });
-                    }}
-                  >
-                    <Text style={styles.buttonText}>Зареєстуватися</Text>
-                  </TouchableOpacity>
+            <View>
+              <TextInput
+                placeholder="Адреса електронної пошти"
+                style={{
+                  ...styles.input,
+                  borderColor: isFocus.email ? "#FF6C00" : "#F6F6F6",
+                  backgroundColor: isFocus.email ? "#FFFFFF" : "#F6F6F6",
+                }}
+                inputMode="email"
+                keyboardType="email-address"
+                autoComplete="email"
+                value={email}
+                onFocus={() => {
+                  setIsFocus({
+                    ...isFocus,
+                    email: true,
+                  });
+                }}
+                onBlur={() => {
+                  setIsFocus({
+                    ...isFocus,
+                    email: false,
+                  });
+                }}
+                onChangeText={(email) => {
+                  setEmail((prevState) => ({ ...prevState, email }));
+                }}
+              />
+            </View>
 
-                  <TouchableOpacity
-                    style={styles.bottomContainer}
-                    onPress={() => navigation.navigate("Login")}
-                  >
-                    <Text style={styles.bottomText}>
-                      Вже є акаунт?<Text>Увійти</Text>
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            )}
-          </Formik>
+            <View>
+              <TextInput
+                placeholder="Пароль"
+                style={{
+                  ...styles.input,
+                  borderColor: isFocus.password ? "#FF6C00" : "#F6F6F6",
+                  backgroundColor: isFocus.password ? "#FFFFFF" : "#F6F6F6",
+                }}
+                value={password}
+                secureTextEntry={true}
+                onFocus={() => {
+                  setIsFocus({
+                    ...isFocus,
+                    password: true,
+                  });
+                }}
+                onBlur={() => {
+                  setIsFocus({
+                    ...isFocus,
+                    password: false,
+                  });
+                }}
+                onChangeText={(password) => {
+                  setPassword((prevState) => ({
+                    ...prevState,
+                    password,
+                  }));
+                }}
+              />
+            </View>
+
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={styles.button}
+              onPress={handelSubmit}>
+              <Text style={styles.buttonTitle}>Зареєструватися</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.notice}
+              onPress={() => navigation.navigate("Login")}>
+              <Text style={styles.textNotice}>
+                Вже є акаунт?<Text>Увійти</Text>
+              </Text>
+            </TouchableOpacity>
+          </View>
         </ImageBackground>
-        <StatusBar style="auto" />
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
-}
-
-export default RegistrationScreen;
+};
